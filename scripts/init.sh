@@ -22,7 +22,10 @@ replacePattern+=('s/label:/"label":/g')
 replacePattern+=('s/videoId:/"videoId":/g')
 replacePattern+=('s/time:/"time":/g')
 replacePattern+=('s/new:false[,]*//g')
+replacePattern+=('s/new:true[,]*//g')
 replacePattern+=('s/,[[:space:]]*/,/g')
+replacePattern+=('s/[[:space:]]*$//g')
+replacePattern+=('s/,}/}/g')
 
 readonly htmlFileName="usbtn_$(date "+%Y%m").txt"
 readonly htmlFile="${cacheDir}/${htmlFileName}"
