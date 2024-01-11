@@ -26,6 +26,6 @@ fi
 
 GOOS="${myOS}" \
   GOARCH="${myARCH}" \
-  go build -o "${destinationDir}/${binaryName}" main.go
+  go build -o "${destinationDir}/${binaryName}" "${PWD}"/*.go
 
 [[ -f "${destinationDir}/${binaryName}" ]] || (echo "失敗した…" > /dev/stderr && exit 3)
