@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"strings"
 )
 
 const PreDownloadedVoiceID = "illust"
@@ -45,15 +44,6 @@ func ReadVoices() ([]Voice, error) {
 		return nil, err
 	}
 	return voices, nil
-}
-
-type VoiceError struct {
-	Message           string
-	RecommendedAction string
-}
-
-func (v *VoiceError) Error() string {
-	return strings.Join([]string{"[ERROR]", v.Message, v.RecommendedAction}, "\n")
 }
 
 //go:embed data/illust.mp3
@@ -99,7 +89,7 @@ func (vu VoiceURL) Load() ([]byte, error) {
 	} else if err != nil {
 		return nil, fmt.Errorf("しぐれういボタンの保存先が確保できませんでした。 [%s] %w", vu.ID, err)
 	} else if !stat.IsDir() {
-		return nil, &VoiceError{
+		return nil, &UiShigError{
 			Message:           "しぐれういボタンの保存先ディレクトリーを確保できませんでした。",
 			RecommendedAction: fmt.Sprintf("%s というファイルを削除するか、別の場所に退避してください", parentDirectory),
 		}
