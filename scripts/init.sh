@@ -15,6 +15,8 @@ readonly cacheDir="${binDir}/caches"
 readonly dataDir="${rootDir}/data"
 readonly dataFile="${dataDir}/ui-shig.jsonl"
 
+# しぐれういボタンからデータをダウンロードする
+
 declare -a replacePattern=()
 replacePattern+=('s/a:/"a":/g')
 replacePattern+=('s/k:/"k":/g')
@@ -32,7 +34,7 @@ readonly htmlFile="${cacheDir}/${htmlFileName}"
 
 if [[ ! -d "${cacheDir}" ]]; then
   mkdir -p "${cacheDir}"
-  echo "init.sh: created cache directory ${cacheDir}"
+  echo "init.sh[SUCCESS]: created cache directory ${cacheDir}"
 fi
 if [[ ! -f "${htmlFile}" ]]; then
   curl --request GET \
@@ -42,7 +44,7 @@ if [[ ! -f "${htmlFile}" ]]; then
     grep '"src"' |
     grep 'a:' |
     grep 'k:' > "${htmlFile}"
-  echo "init.sh: download しぐれういボタン ${htmlFile}"
+  echo "init.sh[SUCCESS]: downloaded しぐれういボタン ${htmlFile}"
 fi
 
 if [[ ! -f "${htmlFile}" ]]; then
@@ -53,16 +55,18 @@ if [[ ! -f "${htmlFile}" ]]; then
   echo "  - しぐれういボタンが落ちてる" > /dev/stderr
   echo "  - ネットワークが繋がってない" > /dev/stderr
   echo "  - このスクリプトがバグってる" > /dev/stderr
+  echo "しぐれういボタンが変更された可能性もあるので、報告してください" > /dev/stderr
+  echo "" > /dev/stderr
   exit 3
 fi
 
 if [[ ! -d "${dataDir}" ]]; then
   mkdir -p "${dataDir}"
-  echo "init.sh: created data directory ${dataDir}"
+  echo "init.sh[SUCCESS]: created data directory ${dataDir}"
 fi
 if [[ -f "${dataFile}" ]]; then
   rm -rf "${dataFile}"
-  echo "init.sh: removed old file ${dataFile}"
+  echo "init.sh[SUCCESS]: removed old file ${dataFile}"
 fi
 
 declare line text pattern
@@ -76,4 +80,36 @@ while read -r line; do
   fi
 done < "${htmlFile}"
 
-echo "init.sh: created file ${dataFile}"
+echo "init.sh[SUCCESS]: created file ${dataFile}"
+
+# イラストレーターのしぐれういと申します
+
+readonly illustratorPath="$(jq --raw-output 'select(.id == "illust") | .src | gsub("\\./";"")' "${dataFile}")"
+if [[ -z "${illustratorPath}" ]]; then
+  echo "「イラストレーターのしぐれういと申します」データが存在しないです" > /dev/stderr
+  echo "しぐれういボタンが変更された可能性もあるので、報告してください" > /dev/stderr
+  echo "" > /dev/stderr
+  exit 3
+fi
+
+readonly illustratorFileName="${illustratorPath##*/}"
+readonly illustratorFile="${dataDir}/${illustratorFileName}"
+
+if [[ -f "${illustratorFile}" ]]; then
+  rm "${illustratorFile}"
+  echo "init.sh[SUCCESS]: removed old file ${illustratorFile}"
+fi
+
+curl --request GET \
+     --silent --location \
+     --url "${shigreUiButton%/*}/${illustratorPath}"\
+     --output "${illustratorFile}"
+
+if [[ -f "${illustratorFile}" ]]; then
+  echo "init.sh[SUCCESS]: downloaded 「イラストレーターのしぐれういと申します」 voice ${illustratorFile}"
+else
+  echo "「イラストレーターのしぐれういと申します」のダウンロードに失敗しました" > /dev/stderr
+  echo "しぐれういボタンが変更された可能性もあるので、報告してください" > /dev/stderr
+  echo "" > /dev/stderr
+  exit 3
+fi
