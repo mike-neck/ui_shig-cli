@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-var sayUserCommandArgumentsDescription = "しぐれういのセリフID"
+var sayUserCommandArgumentsDescription = "しぐれういの音声ID"
 
 var SayUserCommand = UserOrder{
 	Name:                "say",
-	Description:         "しぐれういの声を再生します。",
+	Description:         "しぐれういの音声を再生します。",
 	ArgumentDescription: &sayUserCommandArgumentsDescription,
 	IntOptions:          []IntOption{},
 	StringOptions:       []StringOption{},
@@ -59,7 +59,7 @@ func (say Say) PlayBytes(config UiShigConfig, v VoiceURL, voiceBytes []byte) err
 	stream, format, err := mp3.Decode(rc)
 	if err != nil {
 		return &UiShigError{
-			Message:           fmt.Sprintf("指定したしぐれういボタンが壊れていました。 [%s] %w", say.ID, err),
+			Message:           fmt.Sprintf("指定したしぐれういボタンが壊れていました。 [%s] %v", say.ID, err),
 			RecommendedAction: fmt.Sprintf("ダウンロードしたファイル(%s)を一度ゴミ箱に捨てて再度試してください。それでも駄目な場合はWEBのしぐれういボタンが変更された可能性があるので、こちら(%s)に連絡してみてください。", v.File, config.IssueURL),
 		}
 	}

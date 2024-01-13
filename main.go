@@ -22,7 +22,7 @@ func main() {
 	}
 	app := &cli.App{
 		Name:        "しぐれういCLI",
-		Description: "しぐれういの音声が聞けるコマンドライン・アプリケーションです。しぐれういボタンをスクレイピングしいているだけです。",
+		Description: "しぐれういの音声が聞けるコマンドライン・アプリケーションです。しぐれういボタン(http://cbtm.html.xdomain.jp/usbtn/usbtn.html)をスクレイピングしいているだけです。",
 		Commands:    commands,
 	}
 	err = app.Run(os.Args)
