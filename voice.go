@@ -73,7 +73,7 @@ func (vu VoiceURL) Load() ([]byte, error) {
 	}
 	responseBody := response.Body
 	defer func() { _ = responseBody.Close() }()
-	if 200 <= response.StatusCode && response.StatusCode < 300 {
+	if response.StatusCode < 200 && 300 <= response.StatusCode {
 		return nil, fmt.Errorf("しぐれういボタンへのアクセスに失敗しました。 [%s] %s", vu.ID, response.Status)
 	}
 	allBytes, err := io.ReadAll(responseBody)
