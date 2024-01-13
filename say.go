@@ -10,6 +10,27 @@ import (
 	"time"
 )
 
+var sayUserCommandArgumentsDescription = "しぐれういのセリフID"
+
+var SayUserCommand = UserOrder{
+	Name:                "say",
+	Description:         "しぐれういの声を再生します。",
+	ArgumentDescription: &sayUserCommandArgumentsDescription,
+	IntOptions:          []IntOption{},
+	StringOptions:       []StringOption{},
+	FileOptions:         []FileOption{},
+	ConstructCommand: func(order UserOrder, args []string) (Command, error) {
+		if len(args) == 0 {
+			return nil, &UiShigError{
+				Message:           "再生したいしぐれういの音声IDを指定してください。",
+				RecommendedAction: "ui_shig list で再生したいしぐれういの音声IDを確認してから ui_shig say ID を実行してください",
+			}
+		}
+		id := args[0]
+		return &Say{ID: id}, nil
+	},
+}
+
 type Say struct {
 	ID string
 }
