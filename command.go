@@ -9,7 +9,10 @@ type Command interface {
 type FilePath string
 
 type OptionType interface {
-	int | string | FilePath
+	int |
+		string |
+		FilePath |
+		bool
 }
 
 type Ref[T OptionType] *T
@@ -28,6 +31,8 @@ type StringOption Option[string]
 
 type FileOption Option[FilePath]
 
+type BoolOption Option[bool]
+
 type UserOrder struct {
 	Name                string
 	Description         string
@@ -35,6 +40,7 @@ type UserOrder struct {
 	IntOptions          []IntOption
 	StringOptions       []StringOption
 	FileOptions         []FileOption
+	BoolOptions         []BoolOption
 	ConstructCommand    func(uo UserOrder, args []string) (Command, error)
 }
 
@@ -78,6 +84,15 @@ func (order UserOrder) toCLICommand(config UiShigConfig, voices []Voice) *cli.Co
 			Usage:       option.Description,
 			Required:    option.Required,
 			Destination: reflector.CLIType,
+		})
+	}
+	for _, option := range order.BoolOptions {
+		flags = append(flags, &cli.BoolFlag{
+			Name:        option.Name,
+			Aliases:     option.Aliases,
+			Usage:       option.Description,
+			Required:    option.Required,
+			Destination: option.Reference,
 		})
 	}
 	var argsUsage string
