@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type UiShigError struct {
 	Message           string
@@ -8,5 +11,6 @@ type UiShigError struct {
 }
 
 func (v *UiShigError) Error() string {
-	return strings.Join([]string{"[ERROR]", v.Message, v.RecommendedAction}, "\n")
+	action := fmt.Sprintf("対処方法: %s", v.RecommendedAction)
+	return strings.Join([]string{"[ERROR]", v.Message, action}, "\n")
 }
