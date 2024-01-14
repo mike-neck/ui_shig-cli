@@ -42,8 +42,7 @@ if [[ ! -f "${htmlFile}" ]]; then
       --url "${shigreUiButton}" |
     grep '"id"' |
     grep '"src"' |
-    grep 'a:' |
-    grep 'k:' > "${htmlFile}"
+    grep -v '//,' > "${htmlFile}"
   echo "init.sh[SUCCESS]: downloaded しぐれういボタン ${htmlFile}"
 fi
 
