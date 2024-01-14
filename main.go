@@ -15,6 +15,7 @@ func main() {
 	userOrders := []UserOrder{
 		SayUserCommand,
 		ListUserOrder,
+		CacheUserOrder(),
 	}
 	commands := make([]*cli.Command, len(userOrders))
 	for i, order := range userOrders {
