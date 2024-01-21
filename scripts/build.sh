@@ -59,4 +59,10 @@ GOOS="${myOS}" \
       -ldflags "-X main.UiShigVersion=${version} -X main.UiShigCommit=${commitHash} -X main.UiShigBuildDate=${currentDateTime}" \
       -o "${destinationDir}/${myOS}/${myARCH}/${binaryName}" "${PWD}"/*.go
 
-[[ -f "${destinationDir}/${myOS}/${myARCH}/${binaryName}" ]] || (echo "失敗した…" > /dev/stderr && exit 3)
+if [[ -f "${destinationDir}/${myOS}/${myARCH}/${binaryName}" ]] ; then
+  echo "build success ${destinationDir}/${myOS}/${myARCH}/${binaryName}"
+  exit 0
+else
+  echo "失敗した…" > /dev/stderr
+  exit 3
+fi
