@@ -42,8 +42,11 @@ if [[ -z "${currentDateTime}" ]]; then
   exit 2
 fi
 
+# CGO_ENABLED=1 が必要
+# GOARCH を設定すると CGO_ENABLED=0 に設定されてしまうので明示的に指定する
 GOOS="${myOS}" \
   GOARCH="${myARCH}" \
+  CGO_ENABLED=1 \
   go build \
       -ldflags "-X main.UiShigVersion=${version} -X main.UiShigCommit=${commitHash} -X main.UiShigBuildDate=${currentDateTime}" \
       -o "${destinationDir}/${myOS}/${myARCH}/${binaryName}" "${PWD}"/*.go
