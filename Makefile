@@ -11,6 +11,18 @@ $(NAMES):
 	@"./scripts/$(@).sh"
 
 ####################################
+# Test
+TEST_FILES := $(wildcard *_test.go)
+TEST_NAMES := $(patsubst %_test.go,run-test-%,$(TEST_FILES))
+PRODUCT_FILES := $(filter-out $(TEST_FILES),$(wildcard *.go))
+
+run-test-%: %_test.go
+	@echo "$(@)"
+	@go test "$(patsubst run-test-%,%_test.go,$(@))" $(PRODUCT_FILES)
+
+all-test: $(TEST_NAMES)
+
+####################################
 # OS ARCH 別タスク
 
 TARGET_OS := windows darwin linux
