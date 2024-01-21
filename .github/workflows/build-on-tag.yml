@@ -30,6 +30,9 @@ jobs:
         run: |
           echo "::set-output name=value::$(scripts/get-release-id.sh)"
 
+      - name: Init project
+        run: make init
+
       - name: Build
         run: make build-all
         shell: bash
