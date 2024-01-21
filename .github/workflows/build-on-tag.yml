@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.21
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+
+      - name: Get ReleaseID
+        id: releaseId
+        run: |
+          echo "::set-output name=value::$(scripts/get-release-id.sh)"
+
+      - name: Build
+        run: make build-all
+        shell: bash
+
+      - name: Archive binaries
+        run: make archive-all
+        shell: bash
+
+      - name: Upload archives
+        run: make upload-all
+        env:
+          RELEASE_ID: "${{ steps.releaseId.outputs.value }}"
