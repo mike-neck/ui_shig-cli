@@ -1,4 +1,4 @@
-SHELL := $(shell /usr/bin/env bash)
+SHELL=/usr/bin/env bash
 
 SCRIPTS := $(wildcard scripts/*.sh)
 NAMES := $(patsubst scripts/%,%,$(patsubst %.sh,%,$(SCRIPTS)))
