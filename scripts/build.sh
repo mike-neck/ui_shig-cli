@@ -42,19 +42,22 @@ if [[ -z "${currentDateTime}" ]]; then
   exit 2
 fi
 
-function useCgo() {
-  if [[ "${myOS}" == "linux" ]]; then
-    echo "1"
-  else
-    echo "0"
-  fi
-}
+declare -a BUILD_ENV=()
+BUILD_ENV+=("GOOS=${myOS}")
+BUILD_ENV+=("GOARCH=${myARCH}")
 
-# CGO_ENABLED=1 が必要
+# Linux のビルドで CGO_ENABLED=1 が必要
 # GOARCH を設定すると CGO_ENABLED=0 に設定されてしまうので明示的に指定する
-GOOS="${myOS}" \
-  GOARCH="${myARCH}" \
-  CGO_ENABLED="$(useCgo)" \
+if [[ "${myOS}" == "linux" ]]; then
+  BUILD_ENV+=("CGO_ENABLED=1")
+fi
+
+# GOOS linux で AMD64 にてクロスビルドする場合に C のオプションが必要になる
+if [[ "${myOS}" == "linux" || "${myARCH}" != "$(go env GOARCH)" ]]; then
+  BUILD_ENV+=("CC=aarch64-linux-gnu-gcc")
+fi
+
+env "${BUILD_ENV[@]}" \
   go build \
       -ldflags "-X main.UiShigVersion=${version} -X main.UiShigCommit=${commitHash} -X main.UiShigBuildDate=${currentDateTime}" \
       -o "${destinationDir}/${myOS}/${myARCH}/${binaryName}" "${PWD}"/*.go
