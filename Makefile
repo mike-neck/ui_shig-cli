@@ -36,7 +36,7 @@ define BuildWithOsArch
 .PHONY: build-$(1)-$(2)
 build-$(1)-$(2):
 	@printf "%-20s " $$(@)
-	@if [[ "$(1)" != "linux" || "$(1)" == "$(CURRENT_OS)" ]]; then \
+	@if [[ "$(1)" != "linux" ]] || [[ "$(1)" == "$(CURRENT_OS)" && "$(2)" == "$(TARGET_ARCH)" ]]; then \
 		scripts/build.sh "$(1)" "$(2)" ;\
 		head -n 20 < "README.md" > "bin/$(1)/$(2)/README.md" ;\
 		echo "...done"; \

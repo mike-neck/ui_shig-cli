@@ -53,7 +53,7 @@ if [[ "${myOS}" == "linux" ]]; then
 fi
 
 # GOOS linux で AMD64 にてクロスビルドする場合に C のオプションが必要になる
-if [[ "${myOS}" == "linux" || "${myARCH}" != "$(go env GOARCH)" ]]; then
+if [[ "${myOS}" == "linux" || "${myARCH}" == "arm64" ]]; then
   BUILD_ENV+=("CC=aarch64-linux-gnu-gcc")
 fi
 
@@ -63,9 +63,9 @@ env "${BUILD_ENV[@]}" \
       -o "${destinationDir}/${myOS}/${myARCH}/${binaryName}" "${PWD}"/*.go
 
 if [[ -f "${destinationDir}/${myOS}/${myARCH}/${binaryName}" ]] ; then
-  echo "build success ${destinationDir}/${myOS}/${myARCH}/${binaryName}"
+  printf "build SUCCESS %s " "${destinationDir}/${myOS}/${myARCH}/${binaryName}"
   exit 0
 else
-  echo "失敗した…" > /dev/stderr
+  printf "build FAILED " > /dev/stderr
   exit 3
 fi
