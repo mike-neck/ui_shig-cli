@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install -y \
             libasound2-dev:arm64 \
             g++-aarch64-linux-gnu
-        if: ${{ matrix.target-arch == "arm64" }}
+        if: ${{ matrix.target-arch == 'arm64' }}
 
       - name: Install dependencies amd64
         run: |
@@ -34,7 +34,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libasound2-dev
-        if: ${{ matrix.target-arch == "amd64" }}
+        if: ${{ matrix.target-arch == 'amd64' }}
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v3
