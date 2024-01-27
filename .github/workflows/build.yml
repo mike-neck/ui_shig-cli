@@ -22,7 +22,6 @@ jobs:
 
       - name: Install dependencies arm64
         run: |
-          sudo dpkg --add-architecture arm64
           sudo apt-get update
           sudo apt-get install -y \
             libasound2-dev:arm64 \
