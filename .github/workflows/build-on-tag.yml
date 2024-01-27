@@ -19,9 +19,9 @@ jobs:
     name: "Build[${{ matrix.target-arch }}]"
     steps:
 
-      - name: Install dependencies amd64
+      - name: Install dependencies arm64
         run: |
-          sudo --add-architecture arm64
+          sudo dpkg --add-architecture arm64
           sudo apt-get update
           sudo apt-get install -y \
             libasound2-dev:arm64 \
@@ -30,7 +30,6 @@ jobs:
 
       - name: Install dependencies amd64
         run: |
-          sudo --add-architecture arm64
           sudo apt-get update
           sudo apt-get install -y \
             libasound2-dev
