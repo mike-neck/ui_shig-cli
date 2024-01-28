@@ -30,13 +30,14 @@ all-test: $(TEST_NAMES)
 TARGET_OS := windows darwin linux
 TARGET_ARCH := arm64 amd64
 CURRENT_OS := $(shell go env GOOS)
+CURRENT_ARCH := $(shell go env GOARCH)
 
 #リナックスは別途ビルド手順が必要なので if 分岐してる(TODO Linux用ビルドの手順(oto 依存))
 define BuildWithOsArch
 .PHONY: build-$(1)-$(2)
 build-$(1)-$(2):
 	@printf "%-20s " $$(@)
-	@if [[ "$(1)" != "linux" ]] || [[ "$(1)" == "$(CURRENT_OS)" && "$(2)" == "$(TARGET_ARCH)" ]]; then \
+	@if [[ "$(1)" != "linux" ]] || [[ "$(1)" == "$(CURRENT_OS)" && "$(2)" == "$(CURRENT_ARCH)" ]]; then \
 		scripts/build.sh "$(1)" "$(2)" ;\
 		head -n 20 < "README.md" > "bin/$(1)/$(2)/README.md" ;\
 		echo "...done"; \
