@@ -63,13 +63,21 @@ archive-$(1)-$(2):
 
 endef
 
-TEMPLATES := BuildWithOsArch CleanWithOsArch ArchiveWithOsArch
+define UploadWithOsArch
+.PHONY: upload-$(1)-$(2)
+upload-$(1)-$(2):
+	@echo $$(@)
+	@"./scripts/upload.sh" $(1) $(2)
+
+endef
+
+TEMPLATES := BuildWithOsArch CleanWithOsArch ArchiveWithOsArch UploadWithOsArch
 $(foreach template,$(TEMPLATES),$(foreach os,$(TARGET_OS),$(foreach arch,$(TARGET_ARCH),$(eval $(call $(template),$(os),$(arch))))))
 
 ############################
 # all tasks
 
-ALL_TASKS := build clean archive
+ALL_TASKS := build clean archive upload
 
 define AllTasks
 .PHONY: $(1)-all

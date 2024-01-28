@@ -19,7 +19,8 @@ readonly fileName="${baseName}-${osName}-${archName}-${versionName}.zip"
 readonly archiveFilePath="${rootDir}/bin/${osName}/${archName}/${fileName}"
 if [[ -f "${archiveFilePath}" ]]; then
   echo "release asset file does not exist: ${archiveFilePath}" >> /dev/stderr
-  exit 1
+  # arm64 のビルド諦めた
+  exit 0
 fi
 
 readonly apiPath="$(gh repo view --jq '"/repos/\(.owner.login)/\(.name)/releases"' --json name --json owner | tr -d '"' | tr -d '\n')"
