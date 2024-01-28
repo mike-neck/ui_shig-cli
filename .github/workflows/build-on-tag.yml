@@ -51,4 +51,5 @@ jobs:
       - name: Upload archives
         run: make upload-all
         env:
+          GH_TOKEN: ${{ github.token }}
           RELEASE_ID: "${{ steps.releaseId.outputs.value }}"
