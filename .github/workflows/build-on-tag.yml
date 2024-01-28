@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "::set-output name=value::$(scripts/get-release-id.sh)"
+          echo "value=$(scripts/get-release-id.sh)" >> "${GITHUB_OUTPUT}"
 
       - name: Init project
         run: make init
