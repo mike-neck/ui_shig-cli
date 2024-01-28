@@ -1,7 +1,7 @@
 name: "Test & Build"
 
 on:
-  push: {}
+  push: { }
   pull_request:
     branches:
       - main
@@ -36,4 +36,8 @@ jobs:
 
       - name: Build
         run: make build-all
+        shell: bash
+
+      - name: Show build result
+        run: make show-build-result
         shell: bash

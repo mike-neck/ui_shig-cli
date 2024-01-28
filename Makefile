@@ -78,3 +78,8 @@ $(1)-all: $(foreach os,$(TARGET_OS),$(foreach arch,$(TARGET_ARCH),$(1)-$(os)-$(a
 endef
 
 $(foreach task,$(ALL_TASKS),$(eval $(call AllTasks,$(task))))
+
+.PHONY: show-build-result
+show-build-result:
+	@echo "$(@)"
+	@find "$(PWD)/bin" -type f | sort
