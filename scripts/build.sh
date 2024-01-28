@@ -18,7 +18,7 @@ if [[ -z "${destinationDir}" ]]; then
   exit 1
 fi
 
-readonly binaryName="${4:-ui_shig}"
+declare binaryName="${4:-ui_shig}"
 if [[ -z "${binaryName}" ]]; then
   echo "バイナリーの名前がないが？" > /dev/stderr
   exit 1
