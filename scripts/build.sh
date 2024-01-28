@@ -53,7 +53,7 @@ if [[ "${myOS}" == "linux" ]]; then
 fi
 
 # GOOS linux で AMD64 にてクロスビルドする場合に C のオプションが必要になる
-if [[ "${myOS}" == "linux" || "${myARCH}" == "arm64" ]]; then
+if [[ "${myOS}" == "linux" && "${myARCH}" == "arm64" ]]; then
   BUILD_ENV+=("CC=aarch64-linux-gnu-gcc")
 fi
 
