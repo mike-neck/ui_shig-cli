@@ -57,6 +57,10 @@ if [[ "${myOS}" == "linux" && "${myARCH}" == "arm64" ]]; then
   BUILD_ENV+=("CC=aarch64-linux-gnu-gcc")
 fi
 
+if [[ "${myOS}" == "windows" ]]; then
+  binaryName="${binaryName}.exe"
+fi
+
 env "${BUILD_ENV[@]}" \
   go build \
       -ldflags "-X main.UiShigVersion=${version} -X main.UiShigCommit=${commitHash} -X main.UiShigBuildDate=${currentDateTime}" \

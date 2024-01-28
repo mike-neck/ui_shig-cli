@@ -33,6 +33,11 @@ if [[ ! -f "${binaryDir}/${binaryName}" || ! -x "${binaryDir}/${binaryName}" ]];
   echo "binary file does not exist or is not executable: ${binaryDir}/${binaryName}" >> /dev/stderr
   exit 2
 fi
+
+if [[ "${osName}" == "windows" ]]; then
+  binaryName="${binaryName}.exe"
+fi
+
 zipParams+=("${binaryName}")
 
 zipParams+=("README.md")
