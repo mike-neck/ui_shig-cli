@@ -32,6 +32,8 @@ jobs:
 
       - name: Get ReleaseID
         id: releaseId
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "::set-output name=value::$(scripts/get-release-id.sh)"
 
