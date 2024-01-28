@@ -11,7 +11,7 @@ elif [[ ! "${currentBranch}" == "main" ]]; then
   exit 1
 fi
 
-readonly currentTag="$(git describe --exact-match --abbrev=0)"
+readonly currentTag="$(git describe --tags --abbrev=0)"
 if [[ -z "${currentTag}" ]]; then
   echo "no tag given" >> /dev/stderr
   exit 2
