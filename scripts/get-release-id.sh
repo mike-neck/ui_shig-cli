@@ -17,7 +17,13 @@ if [[ -z "${currentTag}" ]]; then
   exit 2
 fi
 
-readonly apiPath="$(gh repo view --jq '"/repos/\(.owner.login)/\(.name)/releases/tags"' --json name --json owner | tr -d '"' | tr -d '\n')"
+readonly apiPath="$(\
+gh repo view \
+   --jq '"repos/\(.owner.login)/\(.name)/releases"' \
+   --json name --json owner |
+tr -d '"' |
+tr -d '\n'
+)"
 if [[ -z "${apiPath}" ]]; then
   echo "no repository found" >> /dev/stderr
   exit 2
@@ -25,13 +31,16 @@ fi
 
 readonly releaseId="$(
 gh api  \
+    --method POST \
     -H "Accept: application/vnd.github+json" \
     -H "X-GitHub-Api-Version: 2022-11-28" \
-    "${apiPath}/${currentTag}" |
-jq --raw-output 'select(.assets | length == 0) | .id' |
+    "${apiPath}" \
+    -f "tag_name=${currentTag}" \
+    -f "name=Release of ${currentTag}" |
+jq --raw-output '.id' |
 tr -d '\n'
 )"
-if [[ -z "${releaseId}" ]]; then
+if [[ -z "${releaseId}" || "${releaseId}" == "null" ]]; then
   echo "no release-id found for tag ${currentTag}" >> /dev/stderr
   exit 3
 fi
