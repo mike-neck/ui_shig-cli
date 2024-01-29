@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-readonly binaryName="$(basename "${PWD%-*}")"
+declare binaryName
+binaryName="$(basename "${PWD%-*}")"
 
 readonly self="${0}"
 readonly scriptDir="$(cd "${self%/*}" && pwd)"
@@ -8,7 +9,7 @@ readonly rootDir="${scriptDir%/*}"
 
 readonly osName="${1:-"$(go env GOOS)"}"
 readonly archName="${2:-"$(go env GOARCH)"}"
-readonly versionName="$(git describe --tags --abbrev 2>/dev/null || echo "v0.0.0")"
+readonly versionName="$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")"
 if [[ -z "${versionName}" ]]; then
   echo "version is not set" >> /dev/stderr
   exit 1
@@ -29,13 +30,13 @@ if [[ -f "${binaryDir}/${archiveName}" ]]; then
 fi
 zipParams+=("${archiveName}")
 
+if [[ "${osName}" == "windows" ]]; then
+  binaryName="${binaryName}.exe"
+fi
+
 if [[ ! -f "${binaryDir}/${binaryName}" || ! -x "${binaryDir}/${binaryName}" ]]; then
   echo "binary file does not exist or is not executable: ${binaryDir}/${binaryName}" >> /dev/stderr
   exit 2
-fi
-
-if [[ "${osName}" == "windows" ]]; then
-  binaryName="${binaryName}.exe"
 fi
 
 zipParams+=("${binaryName}")
