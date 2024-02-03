@@ -7,8 +7,14 @@ import (
 )
 
 var ListUserOrder = UserOrder{
-	Name:                "list",
-	Description:         "しぐれういの音声IDなどの情報を確認します。",
+	Name: "list",
+	Description: "しぐれういの音声IDなどの情報を確認します。指定できる項目は " +
+		string(ListItemID) + "," +
+		string(ListItemSrc) + "," +
+		string(ListItemKana) + "," +
+		string(ListItemLabel) + "," +
+		string(ListItemYouTube) + " " +
+		"です。",
 	ArgumentDescription: &sayUserCommandArgumentsDescription,
 	IntOptions:          []IntOption{},
 	StringOptions:       []StringOption{},
