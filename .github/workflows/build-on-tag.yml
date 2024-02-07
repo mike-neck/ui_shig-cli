@@ -30,12 +30,10 @@ jobs:
         with:
           go-version: 1.21
 
-      - name: Get ReleaseID
-        id: releaseId
+      - name: Create Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "value=$(scripts/get-release-id.sh)" >> "${GITHUB_OUTPUT}"
+        run: make create-release
 
       - name: Init project
         run: make init
@@ -52,4 +50,3 @@ jobs:
         run: make upload-all
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_ID: "${{ steps.releaseId.outputs.value }}"
