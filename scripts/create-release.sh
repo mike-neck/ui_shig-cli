@@ -29,20 +29,7 @@ if [[ -z "${apiPath}" ]]; then
   exit 2
 fi
 
-readonly releaseId="$(
-gh api  \
-    --method POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    "${apiPath}" \
-    -f "tag_name=${currentTag}" \
-    -f "name=Release of ${currentTag}" |
-jq --raw-output '.id' |
-tr -d '\n'
-)"
-if [[ -z "${releaseId}" || "${releaseId}" == "null" ]]; then
-  echo "no release-id found for tag ${currentTag}" >> /dev/stderr
-  exit 3
-fi
-
-echo "${releaseId}"
+gh release create \
+  "${currentTag}" \
+  --title "Release of ${currentTag}" \
+  --verify-tag
