@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 現在のバージョンを取得します。タグが存在しない場合はデフォルトで"v0.0.0"を返します。
-readonly currentVersion="$(git describe --tags --abbrev 2>/dev/null || echo "v0.0.0")"
+readonly currentVersion="$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")"
 
 # 次のバージョン番号を算出します。
 # メジャー、マイナー、またはパッチバージョンのどのバージョンを上げるかを引数で指定します。
