@@ -16,3 +16,5 @@ fi
 
 git tag --annotate "${tagName}" \
     --message="${tagName}"
+
+git push origin "${tagName}"

@@ -31,5 +31,6 @@ fi
 
 gh release create \
   "${currentTag}" \
+  --generate-notes \
   --title "Release of ${currentTag}" \
   --verify-tag
