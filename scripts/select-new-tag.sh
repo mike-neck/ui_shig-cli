@@ -48,7 +48,13 @@ function determineNextVersionByArgument() {
 # 次のバージョン番号を決定して表示します。
 readonly nextUpdate="${1:-"${UPDATE_TYPE:-""}"}"
 if [[ -n "${nextUpdate}" ]]; then
-  determineNextVersionByArgument "${nextUpdate}"
+  readonly myNextTag="$(determineNextVersionByArgument "${nextUpdate}")"
+  if [[ -n "${myNextTag}" ]]; then
+    echo "${myNextTag}"
+  else
+    echo "invalid updateType: [${nextUpdate}], available is {patch,minor,major}" > /dev/stderr
+    exit 1
+  fi
 else
   selectNextVersion
 fi

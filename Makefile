@@ -91,3 +91,8 @@ $(foreach task,$(ALL_TASKS),$(eval $(call AllTasks,$(task))))
 show-build-result:
 	@echo "$(@)"
 	@find "$(PWD)/bin" -type f | sort
+
+.PHONY: tag
+tag:
+	@echo $(@)
+	@$(PWD)/scripts/create-new-tag.sh
