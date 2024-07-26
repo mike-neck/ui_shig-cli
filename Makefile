@@ -24,6 +24,9 @@ run-test-%: %_test.go
 
 all-test: $(TEST_NAMES)
 
+.PHONY: test
+test: all-test
+
 ####################################
 # OS ARCH 別タスク
 
