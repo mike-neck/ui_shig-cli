@@ -15,6 +15,10 @@ var (
 )
 
 func main() {
+	uiShigConfig, err := newUiShigConfig()
+	if err != nil {
+		log.Fatalf("user home directory error: %v\n", err)
+	}
 	voices, err := ReadVoices()
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
@@ -26,7 +30,7 @@ func main() {
 	}
 	commands := make([]*cli.Command, len(userOrders))
 	for i, order := range userOrders {
-		commands[i] = order.toCLICommand(uiShigConfig, voices)
+		commands[i] = order.toCLICommand(*uiShigConfig, voices)
 	}
 	app := &cli.App{
 		Name:        "しぐれういCLI",
@@ -48,9 +52,16 @@ func main() {
 	}
 }
 
-var uiShigConfig = UiShigConfig{
-	UiShigURL:      DefaultUiShigURL,
-	UiShigCacheDir: path.Join(os.Getenv("HOME"), DefaultDirectoryName, DefaultCacheDirectoryName),
+func newUiShigConfig() (*UiShigConfig, error) {
+	homeDirectory, err := os.UserHomeDir()
+	if err != nil {
+		return nil, err
+	}
+	var uiShigConfig = UiShigConfig{
+		UiShigURL:      DefaultUiShigURL,
+		UiShigCacheDir: path.Join(homeDirectory, DefaultDirectoryName, DefaultCacheDirectoryName),
+	}
+	return &uiShigConfig, nil
 }
 
 //goland:noinspection HttpUrlsUsage

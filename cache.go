@@ -54,7 +54,7 @@ func (cache *Cache) Execute(config UiShigConfig, voices []Voice) error {
 	urls := make([]VoiceURL, 0)
 	if cache.TargetIds == nil || len(cache.TargetIds) == 0 {
 		for _, voice := range voices {
-			url := uiShigConfig.ResolvePath(voice)
+			url := config.ResolvePath(voice)
 			urls = append(urls, url)
 		}
 	} else {
