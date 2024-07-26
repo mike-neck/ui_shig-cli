@@ -45,7 +45,12 @@ func main() {
   ビルド番号: %s
   ビルド日時: %s
 
-`, cli.AppHelpTemplate, UiShigVersion, UiShigCommit, UiShigBuildDate)
+------
+お困りの際はこちらから質問・不具合報告をしてください。
+
+  GitHub: %s
+
+`, cli.AppHelpTemplate, UiShigVersion, UiShigCommit, UiShigBuildDate, DefaultIssueURL)
 	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
