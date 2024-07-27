@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path"
+	"path/filepath"
 )
 
 const PreDownloadedVoiceID = "illust"
@@ -101,7 +101,7 @@ func (vu VoiceURL) Load() ([]byte, bool, error) {
 }
 
 func (vu VoiceURL) GetCacheDir() string {
-	parentDirectory, _ := path.Split(vu.File)
+	parentDirectory, _ := filepath.Split(vu.File)
 	return parentDirectory
 }
 
