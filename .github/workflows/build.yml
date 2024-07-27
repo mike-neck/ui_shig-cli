@@ -87,7 +87,7 @@ jobs:
         # language=bash
         run: |
           if grep -q 'FAIL' result.txt; then
-            echo "Test Failed" >> /dev/stderr
-            cat result.txt >> /dev/stderr
+            echo "Test Failed"
+            cat result.txt
             exit 1
           fi
