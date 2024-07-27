@@ -81,24 +81,32 @@ func (vu VoiceURL) Load() ([]byte, bool, error) {
 	if err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンのデータが読み取れませんでした。 [%s] %w", vu.ID, err)
 	}
-	parentDirectory := vu.GetCacheDir()
-	stat, err := os.Stat(parentDirectory)
-	if err != nil && os.IsNotExist(err) {
-		if err := os.MkdirAll(parentDirectory, 0755); err != nil {
-			return nil, false, fmt.Errorf("しぐれういボタンの保存先ディレクトリーを作成できませんでした。 [%s] %w", parentDirectory, err)
-		}
-	} else if err != nil {
-		return nil, false, fmt.Errorf("しぐれういボタンの保存先が確保できませんでした。 [%s] %w", vu.ID, err)
-	} else if !stat.IsDir() {
-		return nil, false, &UiShigError{
-			Message:           "しぐれういボタンの保存先ディレクトリーを確保できませんでした。",
-			RecommendedAction: fmt.Sprintf("%s というファイルを削除するか、別の場所に退避してください", parentDirectory),
-		}
+	err = vu.CreateCacheDirIfNotExists()
+	if err != nil {
+		return nil, false, err
 	}
 	if err = os.WriteFile(vu.File, allBytes, 0644); err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンを保存できませんでした。 [%s] %w", vu.ID, err)
 	}
 	return allBytes, true, nil
+}
+
+func (vu VoiceURL) CreateCacheDirIfNotExists() error {
+	parentDirectory := vu.GetCacheDir()
+	stat, err := os.Stat(parentDirectory)
+	if err != nil && os.IsNotExist(err) {
+		if err := os.MkdirAll(parentDirectory, 0755); err != nil {
+			return fmt.Errorf("しぐれういボタンの保存先ディレクトリーを作成できませんでした。 [%s] %w", parentDirectory, err)
+		}
+	} else if err != nil {
+		return fmt.Errorf("しぐれういボタンの保存先が確保できませんでした。 [%s] %w", vu.ID, err)
+	} else if !stat.IsDir() {
+		return &UiShigError{
+			Message:           "しぐれういボタンの保存先ディレクトリーを確保できませんでした。",
+			RecommendedAction: fmt.Sprintf("%s というファイルを削除するか、別の場所に退避してください", parentDirectory),
+		}
+	}
+	return nil
 }
 
 func (vu VoiceURL) GetCacheDir() string {
