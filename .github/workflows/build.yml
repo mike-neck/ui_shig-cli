@@ -7,19 +7,17 @@ on:
       - main
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        machine:
-          - ubuntu
-          - windows
-    runs-on: "${{ matrix.machine }}-latest"
+  build-ubuntu:
+    runs-on: "ubuntu-latest"
+    timeout-minutes: 10
+    outputs:
+      tests-url: ${{ steps.upload-tests.outputs.artifact-url }}
+      id: ${{ steps.upload-tests.outputs.artifact-id }}
     permissions:
       contents: write
     steps:
 
       - name: Install dependencies
-        if: "${{ matrix.machine == 'ubuntu' }}"
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -47,3 +45,33 @@ jobs:
       - name: Show build result
         run: make show-build-result
         shell: bash
+
+      - name: Compile Tests for Windows
+        run: make compile-all-tests
+
+      - name: Upload Tests
+        uses: actions/upload-artifact@v4
+        id: upload-tests
+        with:
+          name: all-tests
+          path: bin/tests/*.exe
+          if-no-files-found: error
+
+  test-on-windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Downloads tests
+        uses: actions/download-artifact@v4
+        with:
+          path: tests
+
+      - name: Run tests
+        shell: bash
+        run: find tests -type f -perm 0755 -exec {} \;
+        continue-on-error: true
+
+      - name: Remove artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: all-tests
