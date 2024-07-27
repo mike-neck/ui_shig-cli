@@ -80,7 +80,7 @@ func (vu VoiceURL) Load() ([]byte, bool, error) {
 	if err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンのデータが読み取れませんでした。 [%s] %w", vu.ID, err)
 	}
-	parentDirectory, _ := path.Split(vu.File)
+	parentDirectory := vu.GetCacheDir()
 	stat, err := os.Stat(parentDirectory)
 	if err != nil && os.IsNotExist(err) {
 		if err := os.MkdirAll(parentDirectory, 0755); err != nil {
@@ -98,6 +98,11 @@ func (vu VoiceURL) Load() ([]byte, bool, error) {
 		return nil, false, fmt.Errorf("しぐれういボタンを保存できませんでした。 [%s] %w", vu.ID, err)
 	}
 	return allBytes, true, nil
+}
+
+func (vu VoiceURL) GetCacheDir() string {
+	parentDirectory, _ := path.Split(vu.File)
+	return parentDirectory
 }
 
 func (vu VoiceURL) Delete() error {
