@@ -43,7 +43,7 @@ func TestVoiceURL_GetCacheDir(t *testing.T) {
 	})
 
 	t.Run("DirectoryName Is Valid", func(t *testing.T) {
-		tempDir, err := os.MkdirTemp("", "voice-url-test*cache")
+		tempDir, err := os.MkdirTemp("", "voice-url-test*user")
 		if err != nil {
 			t.Fatal("Failed to create temp dir", err)
 			return
@@ -51,14 +51,28 @@ func TestVoiceURL_GetCacheDir(t *testing.T) {
 		//goland:noinspection GoUnhandledErrorResult
 		defer os.RemoveAll(tempDir)
 
-		path := filepath.Join(tempDir, "test.mp3")
+		path := filepath.Join(tempDir, ".ui_shig", "cache", "sound", "test.mp3")
 		voiceURL := VoiceURL{File: path}
 
 		err = voiceURL.CreateCacheDirIfNotExists()
 
-		assert.Nil(t, err)
+		if !assert.Nil(t, err) {
+			return
+		}
 
 		cacheDir := voiceURL.GetCacheDir()
-		assert.DirExists(t, cacheDir)
+		if !assert.DirExists(t, cacheDir) {
+			return
+		}
+
+		f, err := os.Create(path)
+		if err != nil {
+			t.Fatal("Failed to open file", err)
+			return
+		}
+		//goland:noinspection GoUnhandledErrorResult
+		defer f.Close()
+		_, err = f.Write([]byte("test"))
+		assert.Nilf(t, err, "failed to write to file: %v\n", err)
 	})
 }
