@@ -21,7 +21,7 @@ func TestUiShigConfig_ResolvePath(t *testing.T) {
 	}
 	if runtime.GOOS == "windows" {
 		td.cacheDir = "C:\\user\\test\\.ui_shig\\cache"
-		td.expectedPath = fmt.Sprintf("%s\\sound\\test.mp3", td.cacheDir)
+		td.expectedPath = fmt.Sprintf("%s\\sound\\test.mp4", td.cacheDir)
 	} else {
 		td.cacheDir = "/home/test/.ui_shig/caches"
 		td.expectedPath = fmt.Sprintf("%s/sound/test.mp3", td.cacheDir)
