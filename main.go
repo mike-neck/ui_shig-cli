@@ -5,7 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 )
 
 var (
@@ -64,7 +64,7 @@ func newUiShigConfig() (*UiShigConfig, error) {
 	}
 	var uiShigConfig = UiShigConfig{
 		UiShigURL:      DefaultUiShigURL,
-		UiShigCacheDir: path.Join(homeDirectory, DefaultDirectoryName, DefaultCacheDirectoryName),
+		UiShigCacheDir: filepath.Join(homeDirectory, DefaultDirectoryName, DefaultCacheDirectoryName),
 	}
 	return &uiShigConfig, nil
 }
