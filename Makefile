@@ -22,10 +22,18 @@ run-test-%: %_test.go
 	@echo "$(@)"
 	@go test "$(patsubst run-test-%,%_test.go,$(@))" $(PRODUCT_FILES)
 
+.PHONY: all-test
 all-test: $(TEST_NAMES)
 
 .PHONY: test
 test: all-test
+
+compile-test-%:%_test.go
+	@echo "$(@) -> $(PWD)/bin/tests/$(patsubst compile-test-%,%,$(@))"
+	@GOOS=windows GOARCH=amd64 go test -c -o "$(PWD)/bin/tests/$(patsubst compile-test-%,%,$(@)).exe" "$(patsubst compile-test-%,%_test.go,$(@))" $(PRODUCT_FILES)
+
+.PHONY: compile-all-tests
+compile-all-tests: $(patsubst %_test.go,compile-test-%,$(TEST_FILES))
 
 ####################################
 # OS ARCH 別タスク
