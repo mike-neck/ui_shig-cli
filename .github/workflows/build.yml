@@ -69,7 +69,7 @@ jobs:
 
       - name: Run tests
         shell: bash
-        run: find tests -type f -perm 0755 -print -exec {} \;
+        run: find tests -type f -perm 0755 -print -exec {} \; 2>&1 | tee result.txt
         continue-on-error: true
 
       - name: Remove artifacts
