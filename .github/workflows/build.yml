@@ -58,6 +58,7 @@ jobs:
           if-no-files-found: error
 
   test-on-windows:
+    needs: build-ubuntu
     runs-on: windows-latest
     timeout-minutes: 10
     steps:
