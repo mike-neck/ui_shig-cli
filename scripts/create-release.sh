@@ -2,15 +2,6 @@
 
 set -e
 
-readonly currentBranch="$(git rev-parse --abbrev-ref HEAD)"
-if [[ -z "${currentBranch}" ]]; then
-  echo "repository is broken because a current branch is not available." >> /dev/stderr
-  exit 1
-elif [[ ! "${currentBranch}" == "main" ]]; then
-  echo "current branch is not [main], but ${currentBranch}" >> /dev/stderr
-  exit 1
-fi
-
 readonly currentTag="$(git describe --tags --abbrev=0)"
 if [[ -z "${currentTag}" ]]; then
   echo "no tag given" >> /dev/stderr
