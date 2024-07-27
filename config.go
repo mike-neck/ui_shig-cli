@@ -1,7 +1,8 @@
 package main
 
 import (
-	"path"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -29,7 +30,8 @@ func (uc UiShigConfig) ResolvePath(voice Voice) VoiceURL {
 	url := strings.Join(fragments, "/")
 
 	dir := uc.UiShigCacheDir
-	file := path.Join(dir, voicePath)
+	voidFilePath := strings.ReplaceAll(voicePath, "/", string(os.PathSeparator))
+	file := filepath.Join(dir, voidFilePath)
 
 	return VoiceURL{
 		ID:   voice.ID,
