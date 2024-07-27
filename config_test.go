@@ -8,32 +8,97 @@ import (
 )
 
 func TestUiShigConfig_ResolvePath(t *testing.T) {
-	voice := Voice{
-		Path: "./sound/test.mp3",
-	}
-	type testData struct {
+	type expectation struct {
 		cacheDir     string
 		expectedPath string
 		expectedURL  string
 	}
-	td := testData{
+	exp := expectation{
 		expectedURL: "https://example.com/sound/test.mp3",
 	}
 	if runtime.GOOS == "windows" {
-		td.cacheDir = "C:\\user\\test\\.ui_shig\\cache"
-		td.expectedPath = fmt.Sprintf("%s\\sound\\test.mp3", td.cacheDir)
+		exp.cacheDir = "C:\\user\\test\\.ui_shig\\cache"
+		exp.expectedPath = fmt.Sprintf("%s\\sound\\test.mp3", exp.cacheDir)
 	} else {
-		td.cacheDir = "/home/test/.ui_shig/caches"
-		td.expectedPath = fmt.Sprintf("%s/sound/test.mp3", td.cacheDir)
+		exp.cacheDir = "/home/test/.ui_shig/caches"
+		exp.expectedPath = fmt.Sprintf("%s/sound/test.mp3", exp.cacheDir)
+	}
+	type testData struct {
+		Voice
+		UiShigConfig
+	}
+	noSuffixURL := "https://example.com"
+	suffixedURL := "https://example.com/"
+	tests := []testData{
+		{
+			Voice: Voice{
+				Path: "./sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      noSuffixURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
+		{
+			Voice: Voice{
+				Path: "/sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      noSuffixURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
+		{
+			Voice: Voice{
+				Path: "sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      noSuffixURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
+		{
+			Voice: Voice{
+				Path: "./sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      suffixedURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
+		{
+			Voice: Voice{
+				Path: "/sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      suffixedURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
+		{
+			Voice: Voice{
+				Path: "sound/test.mp3",
+			},
+			UiShigConfig: UiShigConfig{
+				UiShigURL:      suffixedURL,
+				UiShigCacheDir: exp.cacheDir,
+				IssueURL:       "https://example.com/issues",
+			},
+		},
 	}
 
-	config := UiShigConfig{
-		UiShigURL:      "https://example.com/",
-		UiShigCacheDir: td.cacheDir,
-		IssueURL:       "https://example.com/issues",
+	for i, test := range tests {
+		t.Run(fmt.Sprintf("%d url[%s] + path[%s]", i, test.UiShigURL, test.Path), func(t *testing.T) {
+			config := test.UiShigConfig
+			voice := test.Voice
+			v := config.ResolvePath(voice)
+			assert.Equal(t, exp.expectedPath, v.File)
+			assert.Equal(t, exp.expectedURL, v.URL)
+		})
 	}
-
-	v := config.ResolvePath(voice)
-	assert.Equal(t, td.expectedPath, v.File)
-	assert.Equal(t, td.expectedURL, v.URL)
 }
