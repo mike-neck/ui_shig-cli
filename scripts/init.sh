@@ -3,7 +3,7 @@
 set -e
 set -o pipefail
 
-readonly shigreUiButton="http://cbtm.html.xdomain.jp/usbtn/usbtn.html"
+readonly shigreUiButton="https://leiros.cloudfree.jp/usbtn/usbtn.html"
 
 readonly DQ='"'
 readonly FS="${IFS}"
