@@ -34,7 +34,7 @@ func main() {
 	}
 	app := &cli.App{
 		Name:        "しぐれういCLI",
-		Description: "しぐれういの音声が聞けるコマンドライン・アプリケーションです。しぐれういボタン(http://cbtm.html.xdomain.jp/usbtn/usbtn.html)をスクレイピングしいているだけです。",
+		Description: "しぐれういの音声が聞けるコマンドライン・アプリケーションです。しぐれういボタン(https://leiros.cloudfree.jp/usbtn/usbtn.html)をスクレイピングしいているだけです。",
 		Commands:    commands,
 	}
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
@@ -71,7 +71,7 @@ func newUiShigConfig() (*UiShigConfig, error) {
 
 //goland:noinspection HttpUrlsUsage
 const (
-	DefaultUiShigURL          = "http://cbtm.html.xdomain.jp/usbtn"
+	DefaultUiShigURL          = "https://leiros.cloudfree.jp/usbtn/usbtn.html"
 	DefaultDirectoryName      = ".ui_shig"
 	DefaultCacheDirectoryName = "caches"
 	DefaultIssueURL           = "https://github.com/mike-neck/ui_shig-cli/issues/new"
