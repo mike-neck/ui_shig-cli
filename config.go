@@ -35,8 +35,9 @@ func (uc UiShigConfig) ResolvePath(voice Voice) VoiceURL {
 	file := filepath.Join(dir, voidFilePath)
 
 	return VoiceURL{
-		ID:   voice.ID,
-		URL:  url,
-		File: file,
+		ID:      voice.ID,
+		URL:     url,
+		Referer: uc.UiShigReferer,
+		File:    file,
 	}
 }
