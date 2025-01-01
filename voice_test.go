@@ -99,7 +99,7 @@ func TestVoiceURL_Load(t *testing.T) {
 		UiShigReferer:  DefaultUiShigReferer,
 	}
 	url := config.ResolvePath(lastVoice)
-	voice, b, err := url.Load(config)
+	voice, b, err := url.Load()
 	if err != nil {
 		t.Fatalf("failed to load voice[%v]: %v\n", lastVoice, err)
 		return

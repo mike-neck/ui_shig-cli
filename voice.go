@@ -52,12 +52,13 @@ func ReadVoices() ([]Voice, error) {
 var illust []byte
 
 type VoiceURL struct {
-	ID   string
-	URL  string
-	File string
+	ID      string
+	URL     string
+	Referer string
+	File    string
 }
 
-func (vu VoiceURL) Load(config UiShigConfig) ([]byte, bool, error) {
+func (vu VoiceURL) Load() ([]byte, bool, error) {
 	if vu.ID == PreDownloadedVoiceID {
 		return illust, false, nil
 	}
@@ -69,16 +70,11 @@ func (vu VoiceURL) Load(config UiShigConfig) ([]byte, bool, error) {
 		return contents, false, nil
 	}
 	var httpClient http.Client
-	var request http.Request
-	request.Method = "GET"
-	voiceURL, err := url.Parse(vu.URL)
+	request, err := vu.createHTTPRequest()
 	if err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンの URL が正しい形式ではないようです。 [%s] %w", vu.ID, err)
 	}
-	request.URL = voiceURL
-	request.Header = http.Header{}
-	request.Header.Add("Referer", config.UiShigReferer)
-	response, err := httpClient.Do(&request)
+	response, err := httpClient.Do(request)
 	if err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンへのアクセスに失敗しました。 [%s] %w", vu.ID, err)
 	}
@@ -99,6 +95,19 @@ func (vu VoiceURL) Load(config UiShigConfig) ([]byte, bool, error) {
 		return nil, false, fmt.Errorf("しぐれういボタンを保存できませんでした。 [%s] %w", vu.ID, err)
 	}
 	return allBytes, true, nil
+}
+
+func (vu VoiceURL) createHTTPRequest() (*http.Request, error) {
+	voiceURL, err := url.Parse(vu.URL)
+	if err != nil {
+		return nil, err
+	}
+	var request http.Request
+	request.Method = "GET"
+	request.URL = voiceURL
+	request.Header = http.Header{}
+	request.Header.Add("Referer", vu.Referer)
+	return &request, nil
 }
 
 func (vu VoiceURL) CreateCacheDirIfNotExists() error {
