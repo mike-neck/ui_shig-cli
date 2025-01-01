@@ -94,7 +94,7 @@ func (cache *Cache) Execute(config UiShigConfig, voices []Voice) error {
 		}
 	} else {
 		for _, url := range urls {
-			_, downloaded, err := url.Load()
+			_, downloaded, err := url.Load(config)
 			if err != nil {
 				if cache.ShowLogs {
 					_, _ = fmt.Fprintln(os.Stderr, fmt.Sprintf("error: downloading cache[%s]: %s, %v", url.ID, url.File, err))

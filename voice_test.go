@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
+	"time"
 )
 
 func TestVoiceURL_GetCacheDir(t *testing.T) {
@@ -75,4 +77,42 @@ func TestVoiceURL_GetCacheDir(t *testing.T) {
 		_, err = f.Write([]byte("test"))
 		assert.Nilf(t, err, "failed to write to file: %v\n", err)
 	})
+}
+
+func TestVoiceURL_Load(t *testing.T) {
+	voices, err := ReadVoices()
+	if err != nil {
+		t.Errorf("failed to read voices: %v\n", err)
+		return
+	}
+	if len(voices) == 0 {
+		t.Error("no voices found")
+		return
+	}
+	src := rand.NewSource(time.Now().UnixMicro())
+	r := rand.New(src)
+	index := r.Intn(len(voices))
+	lastVoice := voices[index]
+	config := UiShigConfig{
+		UiShigCacheDir: t.TempDir(),
+		UiShigURL:      DefaultUiShigURL,
+		UiShigReferer:  DefaultUiShigReferer,
+	}
+	url := config.ResolvePath(lastVoice)
+	voice, b, err := url.Load(config)
+	if err != nil {
+		t.Fatalf("failed to load voice[%v]: %v\n", lastVoice, err)
+		return
+	}
+	if !b {
+		t.Fail()
+		t.Logf("invalid return value for VoiceURL#Load.succeeded[%v], voice: %v\n", b, lastVoice)
+		return
+	}
+	if len(voice) == 0 {
+		t.Fail()
+		t.Logf("invalid return value for VoiceURL#Load.voice, voice: %v\n", lastVoice)
+		return
+	}
+	t.Logf("loaded voice[%d, %s, %s]: %d\n", index, lastVoice.ID, url.URL, len(voice))
 }

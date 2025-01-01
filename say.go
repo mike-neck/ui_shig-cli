@@ -41,7 +41,7 @@ func (say Say) Execute(config UiShigConfig, voices []Voice) error {
 			continue
 		}
 		voiceURL := config.ResolvePath(voice)
-		contents, _, err := voiceURL.Load()
+		contents, _, err := voiceURL.Load(config)
 		if err != nil {
 			return err
 		}

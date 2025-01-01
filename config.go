@@ -8,6 +8,7 @@ import (
 
 type UiShigConfig struct {
 	UiShigURL      string
+	UiShigReferer  string
 	UiShigCacheDir string
 	IssueURL       string
 }
