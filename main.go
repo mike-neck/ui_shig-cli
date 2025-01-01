@@ -64,6 +64,7 @@ func newUiShigConfig() (*UiShigConfig, error) {
 	}
 	var uiShigConfig = UiShigConfig{
 		UiShigURL:      DefaultUiShigURL,
+		UiShigReferer:  DefaultUiShigReferer,
 		UiShigCacheDir: filepath.Join(homeDirectory, DefaultDirectoryName, DefaultCacheDirectoryName),
 	}
 	return &uiShigConfig, nil
@@ -71,7 +72,8 @@ func newUiShigConfig() (*UiShigConfig, error) {
 
 //goland:noinspection HttpUrlsUsage
 const (
-	DefaultUiShigURL          = "https://leiros.cloudfree.jp/usbtn/usbtn.html"
+	DefaultUiShigURL          = "https://leiros.cloudfree.jp/usbtn/"
+	DefaultUiShigReferer      = "https://leiros.cloudfree.jp/usbtn/usbtn.html"
 	DefaultDirectoryName      = ".ui_shig"
 	DefaultCacheDirectoryName = "caches"
 	DefaultIssueURL           = "https://github.com/mike-neck/ui_shig-cli/issues/new"

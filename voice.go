@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -56,7 +57,7 @@ type VoiceURL struct {
 	File string
 }
 
-func (vu VoiceURL) Load() ([]byte, bool, error) {
+func (vu VoiceURL) Load(config UiShigConfig) ([]byte, bool, error) {
 	if vu.ID == PreDownloadedVoiceID {
 		return illust, false, nil
 	}
@@ -68,7 +69,16 @@ func (vu VoiceURL) Load() ([]byte, bool, error) {
 		return contents, false, nil
 	}
 	var httpClient http.Client
-	response, err := httpClient.Get(vu.URL)
+	var request http.Request
+	request.Method = "GET"
+	voiceURL, err := url.Parse(vu.URL)
+	if err != nil {
+		return nil, false, fmt.Errorf("しぐれういボタンの URL が正しい形式ではないようです。 [%s] %w", vu.ID, err)
+	}
+	request.URL = voiceURL
+	request.Header = http.Header{}
+	request.Header.Add("Referer", config.UiShigReferer)
+	response, err := httpClient.Do(&request)
 	if err != nil {
 		return nil, false, fmt.Errorf("しぐれういボタンへのアクセスに失敗しました。 [%s] %w", vu.ID, err)
 	}
